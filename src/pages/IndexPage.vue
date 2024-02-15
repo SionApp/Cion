@@ -20,16 +20,5 @@ const usersStore = useUsersStore();
 const authStore = useAuthStore();
 onMounted(async () => {
   await authStore.loadUserTable();
-  // const {
-  //   data: { session },
-  // } = await supabase.auth.getSession();
-  // if (session === null) {
-  //   router.push("/login");
-  // }
-  // await getUserData();
 });
-
-// const getUserData = async () => {
-//   usersStore.fetchUsers();
-// };
 </script>
