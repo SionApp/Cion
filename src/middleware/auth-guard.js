@@ -13,11 +13,9 @@ export async function authGuard(to, from, next) {
       return next("/login");
     }
   }
-  /*
   if (to.meta.requiresGuest) {
     return next("/");
   }
-  */
 
   return next();
 }

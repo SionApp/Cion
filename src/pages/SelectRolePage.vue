@@ -8,8 +8,6 @@
     <div v-for="role in roles" :key="role.id">
       <CardChoose :data="role" @click="selectRole(role)" />
     </div>
-    <!--CardChoose />
-    <CardChoose /-->
   </div>
 </template>
 <script setup>

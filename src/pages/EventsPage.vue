@@ -240,13 +240,11 @@ const church_event = reactive({
   rehearsal: false,
 });
 // crea una funcion que me traiga los musicos con los roles desde supabase
-
 const handle_rehearsal = computed(() => church_event.rehearsal);
-const updateProxy = (async) => {
-  formattedString.value;
-};
-
-const save = (async) => {
-  formattedString.value;
-};
 </script>
+
+<style lang="css" scoped>
+.rounded {
+  border-radius: 1rem;
+}
+</style>

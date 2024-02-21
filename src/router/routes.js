@@ -17,7 +17,6 @@ const routes = [
         path: "",
         name: "home",
         component: () => import("pages/IndexPage.vue"),
-        meta: { requiresAuth: true, title: "home" },
         beforeEnter: authGuard,
       },
       /*
@@ -32,22 +31,21 @@ const routes = [
         path: "profile",
         name: "profile",
         component: () => import("pages/ProfilePage.vue"),
-        meta: { requiresAuth: true, title: "profile" },
       },
 
       {
         path: "events",
         name: "events",
         component: () => import("pages/EventsPage.vue"),
-        meta: { requiresAuth: true, title: "events" },
       },
       {
         path: "add-musician",
         name: "add-musician",
         component: () => import("pages/MusicianPage.vue"),
-        meta: { requiresAuth: true, title: "add-musician" },
       },
     ],
+
+    meta: { requiresAuth: true },
   },
 
   {
@@ -61,6 +59,7 @@ const routes = [
         meta: { title: "login" },
       },
     ],
+    meta: { requiresAuth: true },
   },
   {
     path: "/register",
@@ -73,6 +72,7 @@ const routes = [
         meta: { requiresGuest: true, title: "register" },
       },
     ],
+    meta: { requiresAuth: true },
   },
   {
     path: "/forgot-password",
@@ -85,6 +85,7 @@ const routes = [
         meta: { requiresGuest: true, title: "forgot-password" },
       },
     ],
+    meta: { requiresAuth: true },
   },
   {
     path: "/select-role",
@@ -97,6 +98,7 @@ const routes = [
         meta: { requiresGuest: true, title: "select-role" },
       },
     ],
+    meta: { requiresAuth: true },
   },
   {
     path: "/onboarding",
@@ -109,6 +111,7 @@ const routes = [
         meta: { requiresGuest: true, title: "onboarding" },
       },
     ],
+    meta: { requiresAuth: true },
   },
 
   {
@@ -117,8 +120,8 @@ const routes = [
   },
 ];
 
-const router = createRouter({
-  history: createWebHistory(),
-  routes,
-});
+// const router = createRouter({
+//   history: createWebHistory(),
+//   routes,
+// });
 export default routes;
