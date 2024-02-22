@@ -128,6 +128,8 @@ export const useAuthStore = defineStore("auth", {
       await supabase.auth.signOut();
       this.authUser = null;
       this.user = null;
+      console.log("Sign out");
+      router.push({ name: "login" });
     },
 
     async loadUserTable() {

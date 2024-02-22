@@ -60,16 +60,10 @@
 </template>
 
 <script setup>
-import { useQuasar } from "quasar";
-import { ref, reactive, toRefs } from "vue";
-import { storeToRefs } from "pinia";
-import useNotify from "../composables/useNotify";
+import { ref } from "vue";
 import { useAuthStore } from "../store/auth";
 
-const $q = useQuasar();
 const authStore = useAuthStore();
-
-const { notifyError, notifySuccess } = useNotify();
 
 const formData = ref({
   last_name: "",
@@ -104,6 +98,7 @@ const onSubmit = async () => {
   };
 
   const res = await authStore.sendInvitationEmail(user);
+  console.log(res);
 };
 
 const onReset = async () => {

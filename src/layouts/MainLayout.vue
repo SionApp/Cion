@@ -92,9 +92,8 @@ import { supabase } from "../boot/supabase";
 
 import EssentialLink from "components/EssentialLink.vue";
 import MessagesComponent from "src/components/MessagesComponent.vue";
-import { IS_ADMIN } from "src/sources/const";
+
 onMounted(async () => {
-  //await authStore.loadUser();
   await authStore.getSessionUser();
   const {
     data: { session },
@@ -104,6 +103,7 @@ onMounted(async () => {
   }
   await getUserData();
 });
+
 const authStore = useAuthStore();
 
 const usersStore = useUsersStore();
@@ -123,7 +123,6 @@ const getUserData = async () => {
 
 const logout = async () => {
   await authStore.signOutUser();
-  await router.push({ path: "/login" });
 };
 
 const toggleLeftDrawer = () => {
