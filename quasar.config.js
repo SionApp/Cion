@@ -10,7 +10,7 @@
 
 const { configure } = require("quasar/wrappers");
 
-module.exports = configure(function(/* ctx */) {
+module.exports = configure(function (/* ctx */) {
   return {
     eslint: {
       // fix: true,
@@ -76,6 +76,22 @@ module.exports = configure(function(/* ctx */) {
       // vitePlugins: [
       //   [ 'package-name', { ..options.. } ]
       // ]
+      chainWebpack(chain) {
+        chain.module
+          .rule("postcss")
+          .test(/\.css$/)
+          .use("postcss-loader")
+          .loader("postcss-loader")
+          .options({
+            postcssOptions: {
+              plugins: [
+                //           require("postcss-import"),
+                require("tailwindcss"),
+                require("autoprefixer"),
+              ],
+            },
+          });
+      },
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
