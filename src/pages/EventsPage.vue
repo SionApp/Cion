@@ -8,35 +8,76 @@
         :done="step > 1"
       >
         <div class="row">
-          <div class="col-12">
+          <div class="col-6">
             <q-item>
               <q-input
                 dense
+                rounded
                 autogrow
                 outlined
-                class="full-width"
-                label="Name of the Event *"
+                class="full-width rounded-full"
+                label="Nombre del evento *"
                 v-model="church_event.name"
               />
             </q-item>
           </div>
 
-          <div class="col-12">
+          <div class="col-6">
             <q-item>
               <q-input
                 dense
                 autogrow
                 outlined
+                rounded
                 class="full-width"
-                label="Site *"
+                label="Sitio *"
                 v-model="church_event.site"
               />
             </q-item>
           </div>
-
           <div class="col-6">
-            <div class="q-pa-md">
-              <q-input filled v-model="formattedString">
+            <q-item>
+              <q-input
+                dense
+                rounded
+                autogrow
+                outlined
+                class="full-width"
+                label="Description"
+                v-model="church_event.description"
+              />
+            </q-item>
+          </div>
+          <div class="col-6">
+            <q-item>
+              <q-input
+                dense
+                autogrow
+                rounded
+                outlined
+                class="full-width"
+                label="Duracion"
+                v-model="church_event.duration"
+              />
+            </q-item>
+          </div>
+          <div class="col-6">
+            <div class="q-pa-md full-width">
+              <div class="q-gutter-md">
+                <q-select
+                  rounded
+                  dense
+                  outlined
+                  v-model="church_event.state"
+                  :options="church_event_states"
+                  label="Estado del evento"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="q-pa-md full-width">
+              <q-input rounded outlined dense v-model="formattedString">
                 <template v-slot:prepend>
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy
@@ -99,13 +140,13 @@
           <q-card-section class="text-h6 q-pb-none">
             <q-item>
               <q-item-section avatar class="">
-                <q-icon color="blue" name="fa-solid fa-icons" size="44px" />
+                <q-icon color="blue" name="fa-solid fa-icons" size="24px" />
               </q-item-section>
 
               <q-item-section>
                 <q-toggle
                   v-model="church_event.rehearsal"
-                  label="Need Rehearsal?"
+                  label="Programar Ensayo"
                 />
               </q-item-section>
             </q-item>
@@ -150,52 +191,9 @@
             </div>
           </q-card-section>
         </q-card>
-        <q-card class="q-mt-sm">
-          <q-card-section class="text-h6 q-pb-none">
-            <div class="row">
-              <div
-                class="col-span-4"
-                v-for="category in categories"
-                :key="category.name"
-              >
-                <q-item>
-                  <q-item-section>
-                    <q-item-label>
-                      <div class="text-h6">{{ category.name }}</div>
-                    </q-item-label>
-                  </q-item-section>
-                </q-item>
-                <select-multiple />
-              </div>
-            </div>
-          </q-card-section>
-        </q-card>
-        <div>
-          <ul role="list" class="divide-y divide-gray-800">
-            <li class="flex justify-between gap-x-6 py-5">
-              <div class="flex min-w-0 gap-x-4">
-                <img
-                  class="h-12 w-12 flex-none rounded-full bg-gray-800"
-                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  alt=""
-                />
-                <div class="min-w-0 flex-auto">
-                  <p class="text-sm font-semibold leading-6 text-white">
-                    Leslie Alexander
-                  </p>
-                  <p class="mt-1 truncate text-xs leading-5 text-gray-400">
-                    leslie.alexander@example.com
-                  </p>
-                </div>
-              </div>
-              <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-                <p class="text-sm leading-6 text-white">Co-Founder / CEO</p>
-                <p class="mt-1 text-xs leading-5 text-gray-400">
-                  Last seen <time datetime="2023-01-23T13:23Z">3h ago</time>
-                </p>
-              </div>
-            </li>
-          </ul>
+
+        <div class="q-mt-sm">
+          <LoadEventComponent :roles="roles" />
         </div>
       </q-step>
 
@@ -241,37 +239,37 @@
 <script setup>
 import { date } from "quasar";
 
-import { computed, reactive, ref } from "vue";
+import { computed, reactive, ref, onMounted } from "vue";
 import SelectMultiple from "../components/SelectMultiple.vue";
+import LoadEventComponent from "../components/LoadEventComponent.vue";
+import { useRolesStore } from "../store/roles";
+
+const rolesStore = useRolesStore();
+
+onMounted(() => {
+  rolesStore.loadRoles();
+});
+
+const roles = computed(() => {
+  return rolesStore.roles ? rolesStore.roles.map((role) => role) : [];
+});
 
 const step = ref(1);
-/**
- * TODO this refactor
- *  * this is the roles in the db. */
-const categories = [
-  { name: "Director" },
-  { name: "Coristas" },
-  { name: "Piano" },
-  { name: "Guitarra" },
-  { name: "Bateria" },
-  { name: "Bajo" },
-  { name: "Percusion" },
+
+const church_event_states = [
+  "Planificado",
+  "En curso",
+  "Finalizado",
+  "Cancelado",
 ];
-// const date = ref("2019-02-01 12:44");
 
 const timeStamp = Date.now();
+
 const formattedString = ref(date.formatDate(timeStamp, "DD-MM-YYYY"));
 
 const church_event = reactive({
-  site: "Sion Church",
   rehearsal: false,
 });
 // crea una funcion que me traiga los musicos con los roles desde supabase
 const handle_rehearsal = computed(() => church_event.rehearsal);
 </script>
-
-<style lang="css" scoped>
-.rounded {
-  border-radius: 1rem;
-}
-</style>

@@ -123,6 +123,8 @@ const getUserData = async () => {
 
 const logout = async () => {
   await authStore.signOutUser();
+  console.log("logged out");
+  router.push("/login");
 };
 
 const toggleLeftDrawer = () => {
