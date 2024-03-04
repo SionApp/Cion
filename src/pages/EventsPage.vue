@@ -17,7 +17,7 @@
                 outlined
                 class="full-width rounded-full"
                 label="Nombre del evento *"
-                v-model="church_event.name"
+                v-model="form.name"
               />
             </q-item>
           </div>
@@ -31,7 +31,7 @@
                 rounded
                 class="full-width"
                 label="Sitio *"
-                v-model="church_event.site"
+                v-model="form.site"
               />
             </q-item>
           </div>
@@ -44,7 +44,7 @@
                 outlined
                 class="full-width"
                 label="Description"
-                v-model="church_event.description"
+                v-model="form.description"
               />
             </q-item>
           </div>
@@ -57,7 +57,7 @@
                 outlined
                 class="full-width"
                 label="Duracion"
-                v-model="church_event.duration"
+                v-model="form.duration"
               />
             </q-item>
           </div>
@@ -68,7 +68,7 @@
                   rounded
                   dense
                   outlined
-                  v-model="church_event.state"
+                  v-model="form.state"
                   :options="church_event_states"
                   label="Estado del evento"
                 />
@@ -144,10 +144,7 @@
               </q-item-section>
 
               <q-item-section>
-                <q-toggle
-                  v-model="church_event.rehearsal"
-                  label="Programar Ensayo"
-                />
+                <q-toggle v-model="form.rehearsal" label="Programar Ensayo" />
               </q-item-section>
             </q-item>
 
@@ -215,19 +212,19 @@
 
       <template v-slot:navigation>
         <q-stepper-navigation>
-          <div class="flex justify-end">
+          <div class="flex justify-around">
             <q-btn
               v-if="step > 1"
-              flat
-              color="primary"
+              color="deep-orange"
               @click="$refs.stepper.previous()"
-              label="Back"
-              class="q-mr-md"
+              label="Atras"
+              class="q-mr-md rounded-xl"
             />
             <q-btn
-              @click="$refs.stepper.next()"
+              @click="stepperNext"
               color="primary"
-              :label="step === 3 ? 'Finish' : 'Continue'"
+              class="rounded-xl"
+              :label="step === 3 ? 'Registrar' : 'Continuar'"
             />
           </div>
         </q-stepper-navigation>
@@ -239,7 +236,7 @@
 <script setup>
 import { date } from "quasar";
 
-import { computed, reactive, ref, onMounted } from "vue";
+import { computed, reactive, ref, onMounted, watch } from "vue";
 import SelectMultiple from "../components/SelectMultiple.vue";
 import LoadEventComponent from "../components/LoadEventComponent.vue";
 import { useRolesStore } from "../store/roles";
@@ -255,6 +252,7 @@ const roles = computed(() => {
 });
 
 const step = ref(1);
+const stepper = ref(null);
 
 const church_event_states = [
   "Planificado",
@@ -267,9 +265,19 @@ const timeStamp = Date.now();
 
 const formattedString = ref(date.formatDate(timeStamp, "DD-MM-YYYY"));
 
-const church_event = reactive({
+const form = reactive({
   rehearsal: false,
 });
 // crea una funcion que me traiga los musicos con los roles desde supabase
-const handle_rehearsal = computed(() => church_event.rehearsal);
+const handle_rehearsal = computed(() => form.rehearsal);
+
+const fillPayload = () => {
+  console.log(form);
+};
+
+const stepperNext = () => {
+  // Call fillPayload before proceeding to the next step
+  fillPayload();
+  stepper.value.next();
+};
 </script>
