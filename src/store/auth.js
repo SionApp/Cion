@@ -9,7 +9,7 @@ const notify = useNotify();
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
-    user: null,
+    user: null, // este state se penso para tener la informacion del usuario, pero no lo usamos.
     authUser: null,
     resetForm: false,
   }),
@@ -137,15 +137,14 @@ export const useAuthStore = defineStore("auth", {
         .limit(1)
         .single();
       if (error) throw error;
-      this.user = dataUser;
     },
   },
   getters: {
     isLoggedIn() {
       return !!this.user;
     },
-    getUser() {
-      return this.user;
+    async getUser() {
+      await this.getSessionUser();
     },
     roleAccessType() {
       return this.user && this.user.access_role_id;

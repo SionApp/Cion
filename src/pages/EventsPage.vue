@@ -240,8 +240,10 @@ import { computed, reactive, ref, onMounted, watch } from "vue";
 import SelectMultiple from "../components/SelectMultiple.vue";
 import LoadEventComponent from "../components/LoadEventComponent.vue";
 import { useRolesStore } from "../store/roles";
+import { useChurchEventStore } from "../store/churchEvent";
 
 const rolesStore = useRolesStore();
+const chuchEventStore = useChurchEventStore();
 
 onMounted(() => {
   rolesStore.loadRoles();
@@ -265,19 +267,34 @@ const timeStamp = Date.now();
 
 const formattedString = ref(date.formatDate(timeStamp, "DD-MM-YYYY"));
 
-const form = reactive({
-  rehearsal: false,
-});
-// crea una funcion que me traiga los musicos con los roles desde supabase
-const handle_rehearsal = computed(() => form.rehearsal);
+const form = reactive({});
 
-const fillPayload = () => {
-  console.log(form);
+const rehearsal = ref(false);
+
+const handle_rehearsal = computed(() => rehearsal.value);
+const resetStep = computed(() => step.value);
+
+const clearForm = () => {
+  form.name = null;
+  form.site = null;
+  form.description = null;
+  form.duration = null;
+  form.state = null;
 };
 
-const stepperNext = () => {
-  // Call fillPayload before proceeding to the next step
-  fillPayload();
+const stepperNext = async () => {
   stepper.value.next();
+
+  if (stepper.value.modelValue === 3) {
+    try {
+      await chuchEventStore.createEventChurch(form);
+
+      clearForm();
+      resetStep;
+    } catch (error) {
+      console.error("Error creating event:", error);
+      throw error;
+    }
+  }
 };
 </script>

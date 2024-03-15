@@ -38,7 +38,6 @@ export default route(function (/* { store, ssrContext } */) {
     // See if any of the matched routes has meta "requiresAuth"
 
     const { data: session } = await supabase.auth.getSession();
-    console.log(session);
     if (to.matched.some((route) => route.meta.requiresAuth)) {
       // Yes this route requires authentication. See if the user is authenticated.
       if (session === null) {

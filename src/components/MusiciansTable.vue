@@ -44,7 +44,12 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
 import { useUsersStore } from "../store/users"; // Import your Pinia store here
+
+// Define a ref for the users data
+const userData = ref([]);
+const router = useRouter();
 
 const columns = [
   {
@@ -75,19 +80,8 @@ const columns = [
     sortable: true,
     format: (value) => {
       const role = roleOptions.find((option) => option.value === value);
-      return role ? role.label : "";
+      return role ? role.label : "Unknown";
     },
-  },
-];
-// esto debo llenarlo dinamico!
-const roleOptions = [
-  {
-    label: "Musician",
-    value: 1,
-  },
-  {
-    label: "Director",
-    value: 2,
   },
 ];
 
@@ -104,9 +98,15 @@ const pagination = ref({
 
 const usersStore = useUsersStore(); // Replace with your Pinia store
 
-// Define a ref for the users data
-const users = ref([]);
-const router = useRouter();
+const { users } = storeToRefs(usersStore);
+
+const roleOptions = users.value.map((option) => {
+  return {
+    label:
+      option.roles.name.charAt(0).toUpperCase() + option.roles.name.slice(1),
+    value: option.roles.id,
+  };
+});
 
 const onRequest = async (props) => {
   const { page, rowsPerPage, sortBy, descending } = props.pagination;
@@ -124,7 +124,7 @@ const onRequest = async (props) => {
   });
 
   // Update users data
-  users.value = usersStore.users;
+  userData.value = users;
   // Update pagination and loading status
   pagination.value.page = page;
   pagination.value.rowsPerPage = rowsPerPage;

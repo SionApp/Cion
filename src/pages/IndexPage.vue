@@ -7,6 +7,7 @@
 <script setup>
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
 import { supabase } from "../boot/supabase";
 import { useUsersStore } from "../store/users";
 
@@ -18,7 +19,9 @@ const router = useRouter();
 const usersStore = useUsersStore();
 
 const authStore = useAuthStore();
+
 onMounted(async () => {
   await authStore.loadUserTable();
+  const { data: session } = await supabase.auth.getSession();
 });
 </script>

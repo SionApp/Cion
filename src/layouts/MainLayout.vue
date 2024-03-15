@@ -44,7 +44,7 @@
           </q-btn>
           <q-btn round flat>
             <q-avatar size="26px">
-              <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+              <img :src="showAvatar" />
             </q-avatar>
           </q-btn>
           <!---->
@@ -80,7 +80,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, onBeforeMount, ref } from "vue";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
@@ -93,7 +93,8 @@ import { supabase } from "../boot/supabase";
 import EssentialLink from "components/EssentialLink.vue";
 import MessagesComponent from "src/components/MessagesComponent.vue";
 
-onMounted(async () => {
+// all Hook.
+onBeforeMount(async () => {
   await authStore.getSessionUser();
   const {
     data: { session },
@@ -104,19 +105,21 @@ onMounted(async () => {
   await getUserData();
 });
 
+// all definitions Actions store
 const authStore = useAuthStore();
-
 const usersStore = useUsersStore();
-const { roleAccessType } = storeToRefs(authStore);
-
 const router = useRouter();
-const leftDrawerOpen = ref(false);
-
-const essentialLinks = linksList;
 const $q = useQuasar();
 
-const { user } = storeToRefs(authStore);
+// all definitions state store
+const { user, authUser } = storeToRefs(authStore);
+const { roleAccessType } = storeToRefs(authStore);
 
+// all const ref value
+const leftDrawerOpen = ref(false);
+const essentialLinks = linksList;
+
+// all Methods
 const getUserData = async () => {
   usersStore.fetchUsers();
 };
@@ -130,6 +133,12 @@ const logout = async () => {
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 };
+
+const showAvatar = computed(() => {
+  return (
+    authUser.value?.user_metadata.avatar_url || "https://i.pravatar.cc/300"
+  );
+});
 
 const showNavLinks = computed(() => {
   return roleAccessType;

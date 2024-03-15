@@ -67,5 +67,4 @@ const props = defineProps({
   },
 });
 const roles = props.roles;
-console.log(roles);
 </script>

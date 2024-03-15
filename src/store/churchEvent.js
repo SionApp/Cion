@@ -6,20 +6,23 @@ const notify = useNotify();
 
 export const useChurchEventStore = defineStore("churchEvent", {
   state: () => ({
-    status: [],
+    status: null,
   }),
   actions: {
     async createEventChurch(payload) {
       try {
         const { data: createdEvent, error } = await supabase
-          .from("event")
+          .from("events")
           .insert(payload);
-        notify.success("Evento Creado!");
-        this.status.push("Created");
+        if (!error) {
+          notify.notifySuccess("Evento Creado!");
+          this.status = "created";
+        }
       } catch (error) {
         if (error) {
           console.log(error);
           notify.notifyError(`Error al crear el evento, ${error}`);
+          throw error;
         }
       }
     },
